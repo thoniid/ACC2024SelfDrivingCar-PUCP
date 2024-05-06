@@ -214,7 +214,7 @@ def detect_traffic_light(image,pos):
     return image,detection,color
 
 #Carga de modelo
-model=load_model('ModelFuncional3.h5')
+model=load_model('Modelo0605.h5')
 
 #Variables de velocidad y giro 
 forward = 0
@@ -222,7 +222,7 @@ turn = 0
 speed=0.5
 
 #Niveles de giro
-data_cat=['-0.1', '-0.2', '0.0', '0.1', '0.2']
+data_cat=['-0.1', '-0.3', '0.0', '0.1', '0.3']
 
 #Flags counters
 count = 0
@@ -248,9 +248,9 @@ while True:
 
     #Carga y preprocesamiento de la imagen
     x, camera_image1 = car2.get_image(camera=car2.CAMERA_RGB)
-    #imagen = cv2.resize(camera_image1, (160, 120))
-    #imagen=imagen[120:240,0:320]
-    imagen= segmentar_pista(camera_image1)
+    imagen = cv2.resize(camera_image1, (320, 240))
+    imagen=imagen[120:240,0:320]
+    imagen= segmentar_pista(imagen)
     imagen = np.expand_dims(imagen, axis=-1)
     imagen = np.expand_dims(imagen, axis=0)
     imagen = np.concatenate([imagen] * 3, axis=-1)
@@ -262,7 +262,7 @@ while True:
     new_turn=data_cat[np.argmax(score)]
 
     if speed==0 and stop==0:
-            time.sleep(5)
+            time.sleep(3)
             #Tiempo a detenerse por señal de stop
             speed=0.5
     
@@ -289,7 +289,7 @@ while True:
             stop=0
         
         #Tiempo necesario para volver a detectar una nueva señal y no detecte la misma varias veces
-        if final_time-initial_time>8:
+        if final_time-initial_time>5:
             stop=1
     
     #Logica deteccion semaforo
